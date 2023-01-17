@@ -1,12 +1,14 @@
-'use strict';
-var config = require('../config');
-var sendgrid = require('sendgrid')(config.sendgridKey);
+'use strict'
+
+import config from '../config'
+
+const sendgrid = require('sendgrid')(config.sendgridKey)
 
 exports.send = async (to, subject, body) => {
-    sendgrid.send({
-        to: to,
-        from: 'hello@balta.io',
-        subject: subject,
-        html: body
-    });
+  sendgrid.send({
+    to,
+    from: 'hello@balta.io',
+    subject,
+    html: body,
+  })
 }
