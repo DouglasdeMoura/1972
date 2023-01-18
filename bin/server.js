@@ -1,4 +1,4 @@
-import 'setup'
+import './setup.js'
 
 import http from 'node:http'
 import debugFn from 'debug'
