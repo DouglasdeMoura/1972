@@ -1,7 +1,7 @@
 const config = {
-  connectionString: 'mongodb://balta:balta@ds032340.mlab.com:32340/ndstr',
-  sendgridKey: 'SUA CHAVE',
-  containerConnectionString: 'SUA CONNECTION STRING',
+  connectionString: process.env.MONGO_URI,
+  sendgridKey: process.env.SENDGRID_KEY,
+  containerConnectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
 }
 
 export default config
