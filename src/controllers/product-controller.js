@@ -58,12 +58,12 @@ const post = async (req, res) => {
   contract.hasMinLen(
     req.body.slug,
     3,
-    'O título deve conter pelo menos 3 caracteres'
+    'O slug deve conter pelo menos 3 caracteres'
   )
   contract.hasMinLen(
     req.body.description,
     3,
-    'O título deve conter pelo menos 3 caracteres'
+    'A descrição deve conter pelo menos 3 caracteres'
   )
 
   // Se os dados forem inválidos
@@ -74,9 +74,9 @@ const post = async (req, res) => {
 
   try {
     // Cria o Blob Service
+    let filename = `${nanoid()}.jpg`
     const blobSvc = azure.createBlobService(config.containerConnectionString)
 
-    let filename = `${nanoid()}.jpg`
     const rawdata = req.body.image
     const matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
     const type = matches[1]
