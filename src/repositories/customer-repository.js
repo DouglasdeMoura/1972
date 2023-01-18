@@ -5,6 +5,11 @@ export const create = async (data) => {
   await customer.save()
 }
 
+export const getSalt = async (email) => {
+  const res = await Customer.findOne({ email }, 'salt')
+  return res
+}
+
 export const authenticate = async (data) => {
   const res = await Customer.findOne({
     email: data.email,
