@@ -1,8 +1,6 @@
-'use strict'
-const mongoose = require('mongoose')
-const Product = mongoose.model('Product')
+import Product from '../models/product.js'
 
-exports.get = async () => {
+const get = async () => {
   const res = await Product.find(
     {
       active: true,
@@ -12,7 +10,7 @@ exports.get = async () => {
   return res
 }
 
-exports.getBySlug = async (slug) => {
+const getBySlug = async (slug) => {
   const res = await Product.findOne(
     {
       slug,
@@ -23,12 +21,12 @@ exports.getBySlug = async (slug) => {
   return res
 }
 
-exports.getById = async (id) => {
+const getById = async (id) => {
   const res = await Product.findById(id)
   return res
 }
 
-exports.getByTag = async (tag) => {
+const getByTag = async (tag) => {
   const res = Product.find(
     {
       tags: tag,
@@ -39,12 +37,12 @@ exports.getByTag = async (tag) => {
   return res
 }
 
-exports.create = async (data) => {
+const create = async (data) => {
   const product = new Product(data)
   await product.save()
 }
 
-exports.update = async (id, data) => {
+const update = async (id, data) => {
   await Product.findByIdAndUpdate(id, {
     $set: {
       title: data.title,
@@ -55,6 +53,16 @@ exports.update = async (id, data) => {
   })
 }
 
-exports.delete = async (id) => {
+const deleteById = async (id) => {
   await Product.findOneAndRemove(id)
+}
+
+export default {
+  get,
+  getBySlug,
+  getById,
+  getByTag,
+  create,
+  update,
+  delete: deleteById,
 }

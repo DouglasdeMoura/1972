@@ -1,10 +1,8 @@
-'use strict'
+import { nanoid } from 'nanoid'
+import * as repository from '../repositories/order-repository.js'
+import * as authService from '../services/auth-service.js'
 
-const nanoid = require('nanoid')
-const repository = require('../repositories/order-repository')
-const authService = require('../services/auth-service')
-
-exports.get = async (_req, res) => {
+export const get = async (_req, res) => {
   try {
     const data = await repository.get()
     res.status(200).send(data)
@@ -15,7 +13,7 @@ exports.get = async (_req, res) => {
   }
 }
 
-exports.post = async (req, res) => {
+export const post = async (req, res) => {
   try {
     const token =
       req.body.token || req.query.token || req.headers['x-access-token']

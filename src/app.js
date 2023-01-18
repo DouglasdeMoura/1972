@@ -1,20 +1,19 @@
-'use strict'
+import express from 'express'
+import bodyParser from 'body-parser'
+import mongoose from 'mongoose'
+import config from './config.js'
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
-const config = require('./config')
+// Carrega as Rotas
+import indexRoute from './routes/index-route.js'
+import productRoute from './routes/product-route.js'
+import customerRoute from './routes/customer-route.js'
+import orderRoute from './routes/order-route.js'
 
 const app = express()
 
+mongoose.set('strictQuery', false)
 // Connecta ao banco
 mongoose.connect(config.connectionString)
-
-// Carrega as Rotas
-const indexRoute = require('./routes/index-route')
-const productRoute = require('./routes/product-route')
-const customerRoute = require('./routes/customer-route')
-const orderRoute = require('./routes/order-route')
 
 app.use(
   bodyParser.json({
@@ -43,4 +42,4 @@ app.use('/products', productRoute)
 app.use('/customers', customerRoute)
 app.use('/orders', orderRoute)
 
-module.exports = app
+export default app

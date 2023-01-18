@@ -1,9 +1,8 @@
-'use strict'
+import { Router } from 'express'
+import controller from '../controllers/product-controller.js'
+import * as authService from '../services/auth-service.js'
 
-const express = require('express')
-const router = express.Router()
-const controller = require('../controllers/product-controller')
-const authService = require('../services/auth-service')
+const router = Router()
 
 router.get('/', controller.get)
 router.get('/:slug', controller.getBySlug)
@@ -13,4 +12,4 @@ router.post('/', authService.isAdmin, controller.post)
 router.put('/:id', authService.isAdmin, controller.put)
 router.delete('/', authService.isAdmin, controller.delete)
 
-module.exports = router
+export default router

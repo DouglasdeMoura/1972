@@ -1,13 +1,10 @@
-'use strict'
+import md5 from 'md5'
+import ValidationContract from '../validators/fluent-validator.js'
+import * as repository from '../repositories/customer-repository.js'
+import * as authService from '../services/auth-service.js'
+import * as emailService from '../services/email-service.js'
 
-const md5 = require('md5')
-const ValidationContract = require('../validators/fluent-validator')
-const repository = require('../repositories/customer-repository')
-const authService = require('../services/auth-service')
-
-const emailService = require('../services/email-service')
-
-exports.post = async (req, res) => {
+export const post = async (req, res) => {
   const contract = new ValidationContract()
   contract.hasMinLen(
     req.body.name,
@@ -31,14 +28,14 @@ exports.post = async (req, res) => {
     await repository.create({
       name: req.body.name,
       email: req.body.email,
-      password: md5(req.body.password + global.SALT_KEY),
+      password: md5(req.body.password + process.env.SALT_KEY),
       roles: ['user'],
     })
 
     emailService.send(
       req.body.email,
       'Bem vindo ao Node Store',
-      global.EMAIL_TMPL.replace('{0}', req.body.name)
+      process.env.EMAIL_TMPL.replace('{0}', req.body.name)
     )
 
     res.status(201).send({
@@ -51,11 +48,11 @@ exports.post = async (req, res) => {
   }
 }
 
-exports.authenticate = async (req, res) => {
+export const authenticate = async (req, res) => {
   try {
     const customer = await repository.authenticate({
       email: req.body.email,
-      password: md5(req.body.password + global.SALT_KEY),
+      password: md5(req.body.password + process.env.SALT_KEY),
     })
 
     if (!customer) {
@@ -86,7 +83,7 @@ exports.authenticate = async (req, res) => {
   }
 }
 
-exports.refreshToken = async (req, res) => {
+export const refreshToken = async (req, res) => {
   try {
     const token =
       req.body.token || req.query.token || req.headers['x-access-token']

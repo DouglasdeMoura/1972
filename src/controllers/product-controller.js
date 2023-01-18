@@ -1,12 +1,10 @@
-'use strict'
+import { nanoid } from 'nanoid'
+import azure from 'azure-storage'
+import ValidationContract from '../validators/fluent-validator.js'
+import repository from '../repositories/product-repository.js'
+import config from '../config.js'
 
-const guid = require('guid')
-const azure = require('azure-storage')
-const ValidationContract = require('../validators/fluent-validator')
-const repository = require('../repositories/product-repository')
-const config = require('../config')
-
-exports.get = async (req, res) => {
+const get = async (req, res) => {
   try {
     const data = await repository.get()
     res.status(200).send(data)
@@ -17,7 +15,7 @@ exports.get = async (req, res) => {
   }
 }
 
-exports.getBySlug = async (req, res) => {
+const getBySlug = async (req, res) => {
   try {
     const data = await repository.getBySlug(req.params.slug)
     res.status(200).send(data)
@@ -28,7 +26,7 @@ exports.getBySlug = async (req, res) => {
   }
 }
 
-exports.getById = async (req, res) => {
+const getById = async (req, res) => {
   try {
     const data = await repository.getById(req.params.id)
     res.status(200).send(data)
@@ -39,7 +37,7 @@ exports.getById = async (req, res) => {
   }
 }
 
-exports.getByTag = async (req, res) => {
+const getByTag = async (req, res) => {
   try {
     const data = await repository.getByTag(req.params.tag)
     res.status(200).send(data)
@@ -50,7 +48,7 @@ exports.getByTag = async (req, res) => {
   }
 }
 
-exports.post = async (req, res) => {
+const post = async (req, res) => {
   const contract = new ValidationContract()
   contract.hasMinLen(
     req.body.title,
@@ -78,7 +76,7 @@ exports.post = async (req, res) => {
     // Cria o Blob Service
     const blobSvc = azure.createBlobService(config.containerConnectionString)
 
-    let filename = `${guid.raw().toString()}.jpg`
+    let filename = `${nanoid()}.jpg`
     const rawdata = req.body.image
     const matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
     const type = matches[1]
@@ -120,7 +118,7 @@ exports.post = async (req, res) => {
   }
 }
 
-exports.put = async (req, res) => {
+const put = async (req, res) => {
   try {
     await repository.update(req.params.id, req.body)
     res.status(200).send({
@@ -133,7 +131,7 @@ exports.put = async (req, res) => {
   }
 }
 
-exports.delete = async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
     await repository.delete(req.body.id)
     res.status(200).send({
@@ -144,4 +142,14 @@ exports.delete = async (req, res) => {
       message: 'Falha ao processar sua requisição',
     })
   }
+}
+
+export default {
+  get,
+  getBySlug,
+  getById,
+  getByTag,
+  post,
+  put,
+  delete: deleteProduct,
 }

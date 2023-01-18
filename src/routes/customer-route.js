@@ -1,12 +1,12 @@
-'use strict'
+import { Router } from 'express'
 
-const express = require('express')
-const router = express.Router()
-const controller = require('../controllers/customer-controller')
-const authService = require('../services/auth-service')
+import * as controller from '../controllers/customer-controller.js'
+import * as authService from '../services/auth-service.js'
+
+const router = Router()
 
 router.post('/', controller.post)
 router.post('/authenticate', controller.authenticate)
 router.post('/refresh-token', authService.authorize, controller.refreshToken)
 
-module.exports = router
+export default router

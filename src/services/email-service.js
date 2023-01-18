@@ -1,11 +1,10 @@
-'use strict'
+import sendgrid from 'sendgrid'
+import config from '../config.js'
 
-import config from '../config'
+const sendgridClient = sendgrid(config.sendgridKey)
 
-const sendgrid = require('sendgrid')(config.sendgridKey)
-
-exports.send = async (to, subject, body) => {
-  sendgrid.send({
+export const send = async (to, subject, body) => {
+  sendgridClient.send({
     to,
     from: 'hello@balta.io',
     subject,
