@@ -1,8 +1,15 @@
-import md5 from 'md5'
+import * as argon2 from 'argon2themax'
 import ValidationContract from '../validators/fluent-validator.js'
 import * as repository from '../repositories/customer-repository.js'
 import * as authService from '../services/auth-service.js'
 import * as emailService from '../services/email-service.js'
+
+const hashPassword = async (password) => {
+  const options = await argon2.getMaxOptions()
+  const salt = await argon2.generateSalt()
+  const hash = await argon2.hash(password, salt, options)
+  return { hash, salt }
+}
 
 export const post = async (req, res) => {
   const contract = new ValidationContract()
@@ -25,10 +32,13 @@ export const post = async (req, res) => {
   }
 
   try {
+    const { hash, salt } = await hashPassword(req.body.password)
+
     await repository.create({
       name: req.body.name,
       email: req.body.email,
-      password: md5(req.body.password + process.env.SALT_KEY),
+      password: hash,
+      salt,
       roles: ['user'],
     })
 
@@ -52,7 +62,7 @@ export const authenticate = async (req, res) => {
   try {
     const customer = await repository.authenticate({
       email: req.body.email,
-      password: md5(req.body.password + process.env.SALT_KEY),
+      password: req.body.password,
     })
 
     if (!customer) {

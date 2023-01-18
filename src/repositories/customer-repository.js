@@ -1,3 +1,4 @@
+import * as argon2 from 'argon2themax'
 import Customer from '../models/customer.js'
 
 export const create = async (data) => {
@@ -5,16 +6,17 @@ export const create = async (data) => {
   await customer.save()
 }
 
-export const getSalt = async (email) => {
-  const res = await Customer.findOne({ email }, 'salt')
-  return res
-}
-
 export const authenticate = async (data) => {
   const res = await Customer.findOne({
     email: data.email,
-    password: data.password,
   })
+
+  const match = await argon2.verify(res.password, data.password)
+
+  if (!match) {
+    return null
+  }
+
   return res
 }
 
