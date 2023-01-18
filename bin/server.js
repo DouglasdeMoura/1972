@@ -1,9 +1,8 @@
+import 'setup'
+
 import http from 'node:http'
-import * as dotenv from 'dotenv'
 import debugFn from 'debug'
 import app from '../src/app.js'
-
-dotenv.config()
 
 const debug = debugFn('balta:server')
 

@@ -16,13 +16,13 @@ export const post = async (req, res) => {
   contract.hasMinLen(
     req.body.name,
     3,
-    'O nome deve conter pelo menos 3 caracteres'
+    'O nome deve conter pelo menos 3 caracteres',
   )
   contract.isEmail(req.body.email, 'E-mail inválido')
   contract.hasMinLen(
     req.body.password,
     6,
-    'A senha deve conter pelo menos 6 caracteres'
+    'A senha deve conter pelo menos 6 caracteres',
   )
 
   // Se os dados forem inválidos
@@ -45,7 +45,7 @@ export const post = async (req, res) => {
     emailService.send(
       req.body.email,
       'Bem vindo ao Node Store',
-      process.env.EMAIL_TMPL.replace('{0}', req.body.name)
+      process.env.EMAIL_TMPL.replace('{0}', req.body.name),
     )
 
     res.status(201).send({

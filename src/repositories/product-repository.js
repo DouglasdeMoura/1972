@@ -5,7 +5,7 @@ const get = async () => {
     {
       active: true,
     },
-    'title price slug'
+    'title price slug',
   )
   return res
 }
@@ -16,7 +16,7 @@ const getBySlug = async (slug) => {
       slug,
       active: true,
     },
-    'title description price slug tags'
+    'title description price slug tags',
   )
   return res
 }
@@ -32,7 +32,7 @@ const getByTag = async (tag) => {
       tags: tag,
       active: true,
     },
-    'title description price slug tags'
+    'title description price slug tags',
   )
   return res
 }

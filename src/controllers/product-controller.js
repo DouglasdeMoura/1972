@@ -53,17 +53,17 @@ const post = async (req, res) => {
   contract.hasMinLen(
     req.body.title,
     3,
-    'O título deve conter pelo menos 3 caracteres'
+    'O título deve conter pelo menos 3 caracteres',
   )
   contract.hasMinLen(
     req.body.slug,
     3,
-    'O slug deve conter pelo menos 3 caracteres'
+    'O slug deve conter pelo menos 3 caracteres',
   )
   contract.hasMinLen(
     req.body.description,
     3,
-    'A descrição deve conter pelo menos 3 caracteres'
+    'A descrição deve conter pelo menos 3 caracteres',
   )
 
   // Se os dados forem inválidos
@@ -94,7 +94,7 @@ const post = async (req, res) => {
         if (error) {
           filename = 'default-product.png'
         }
-      }
+      },
     )
 
     await repository.create({

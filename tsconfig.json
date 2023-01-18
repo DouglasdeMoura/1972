@@ -5,11 +5,16 @@
     "strict": false,
     "isolatedModules": false,
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "baseUrl": ".",
+    "types": [
+      "vitest/globals"
+    ]
   },
   "include": [
     "./src",
-    "./test"
+    "./test",
+    "./tests"
   ],
   "exclude": [
     "**/__tests__/",
