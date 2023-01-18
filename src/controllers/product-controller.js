@@ -79,7 +79,7 @@ const post = async (req, res) => {
 
     const rawdata = req.body.image
     const matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
-    const type = matches[1]
+    // const type = matches[1]
     const buffer = Buffer.from(matches[2], 'base64')
 
     // Salva a imagem
@@ -88,7 +88,7 @@ const post = async (req, res) => {
       filename,
       buffer,
       {
-        contentType: type,
+        // contentType: type,
       },
       (error) => {
         if (error) {
