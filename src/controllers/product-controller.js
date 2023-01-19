@@ -4,7 +4,7 @@ import ValidationContract from '../validators/fluent-validator.js'
 import repository from '../repositories/product-repository.js'
 import config from '../config.js'
 
-const get = async (req, res) => {
+const get = async (_req, res) => {
   try {
     const data = await repository.get()
     res.status(200).send(data)
@@ -65,6 +65,7 @@ const post = async (req, res) => {
     3,
     'A descrição deve conter pelo menos 3 caracteres',
   )
+  contract.isNumber(req.body.price, 'O preço é obrigatório')
 
   // Se os dados forem inválidos
   if (!contract.isValid()) {
@@ -74,28 +75,33 @@ const post = async (req, res) => {
 
   try {
     // Cria o Blob Service
-    let filename = `${nanoid()}.jpg`
-    const blobSvc = azure.createBlobService(config.containerConnectionString)
+    let filename = 'default-product.png'
 
-    const rawdata = req.body.image
-    const matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
-    // const type = matches[1]
-    const buffer = Buffer.from(matches[2], 'base64')
+    const rawdata = req.body?.image
 
-    // Salva a imagem
-    await blobSvc.createBlockBlobFromText(
-      'product-images',
-      filename,
-      buffer,
-      {
-        // contentType: type,
-      },
-      (error) => {
-        if (error) {
-          filename = 'default-product.png'
-        }
-      },
-    )
+    if (rawdata) {
+      filename = `${nanoid()}.jpg`
+      const matches = rawdata?.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
+      // const type = matches[1]
+
+      const buffer = Buffer.from(matches[2], 'base64')
+
+      const blobSvc = azure.createBlobService(config.containerConnectionString)
+      // Salva a imagem
+      await blobSvc.createBlockBlobFromText(
+        'product-images',
+        filename,
+        buffer,
+        {
+          // contentType: type,
+        },
+        (error) => {
+          if (error) {
+            filename = 'default-product.png'
+          }
+        },
+      )
+    }
 
     await repository.create({
       title: req.body.title,
