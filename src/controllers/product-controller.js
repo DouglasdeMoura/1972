@@ -124,11 +124,7 @@ const post = async (req, res) => {
       message: 'Produto cadastrado com sucesso!',
     })
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log(e)
-    res.status(500).send({
-      message: 'Falha ao processar sua requisição',
-    })
+    throw new HTTPError(500, e?.message)
   }
 }
 
