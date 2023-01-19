@@ -22,6 +22,12 @@ ValidationContract.prototype.hasMaxLen = (value, max, message) => {
   }
 }
 
+ValidationContract.prototype.isNumber = (value, message) => {
+  if (!value || typeof value !== 'number' || !isFinite(value)) {
+    errors.push({ message })
+  }
+}
+
 ValidationContract.prototype.isFixedLen = (value, len, message) => {
   if (value.length !== len) {
     errors.push({ message })
