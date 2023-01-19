@@ -51,21 +51,24 @@ const getByTag = async (req, res) => {
 const post = async (req, res) => {
   const contract = new ValidationContract()
   contract.hasMinLen(
+    'title',
     req.body.title,
     3,
     'O título deve conter pelo menos 3 caracteres',
   )
   contract.hasMinLen(
+    'slug',
     req.body.slug,
     3,
     'O slug deve conter pelo menos 3 caracteres',
   )
   contract.hasMinLen(
+    'description',
     req.body.description,
     3,
     'A descrição deve conter pelo menos 3 caracteres',
   )
-  contract.isNumber(req.body.price, 'O preço é obrigatório')
+  contract.isNumber('price', req.body.price, 'O preço é obrigatório')
 
   // Se os dados forem inválidos
   if (!contract.isValid()) {

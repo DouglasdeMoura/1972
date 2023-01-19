@@ -4,40 +4,40 @@ function ValidationContract() {
   errors = []
 }
 
-ValidationContract.prototype.isRequired = (value, message) => {
+ValidationContract.prototype.isRequired = (name, value, message) => {
   if (!value || value.length <= 0) {
-    errors.push({ message })
+    errors.push({ name, message })
   }
 }
 
-ValidationContract.prototype.hasMinLen = (value, min, message) => {
+ValidationContract.prototype.hasMinLen = (name, value, min, message) => {
   if (!value || value.length < min) {
-    errors.push({ message })
+    errors.push({ name, message })
   }
 }
 
-ValidationContract.prototype.hasMaxLen = (value, max, message) => {
+ValidationContract.prototype.hasMaxLen = (name, value, max, message) => {
   if (!value || value.length > max) {
-    errors.push({ message })
+    errors.push({ name, message })
   }
 }
 
-ValidationContract.prototype.isNumber = (value, message) => {
+ValidationContract.prototype.isNumber = (name, value, message) => {
   if (!value || typeof value !== 'number' || !isFinite(value)) {
-    errors.push({ message })
+    errors.push({ name, message })
   }
 }
 
-ValidationContract.prototype.isFixedLen = (value, len, message) => {
+ValidationContract.prototype.isFixedLen = (name, value, len, message) => {
   if (value.length !== len) {
-    errors.push({ message })
+    errors.push({ name, message })
   }
 }
 
-ValidationContract.prototype.isEmail = (value, message) => {
+ValidationContract.prototype.isEmail = (name, value, message) => {
   const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
   if (!reg.test(value)) {
-    errors.push({ message })
+    errors.push({ name, message })
   }
 }
 
