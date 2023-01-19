@@ -87,15 +87,43 @@ describe('customer-route', () => {
       )
     })
 
-    it.skip('deve validar o payload da requisição', async () => {
+    it('deve validar o payload da requisição', async () => {
       const response = await request
         .post('/products')
         .set('Authorization', `Bearer ${admin}`)
 
-      expect(response.status).toBe(400)
-      expect(response.body).toEqual({
-        message: 'Esta funcionalidade é restrita para administradores',
-      })
+      expect(response.status).toBe(422)
+      expect(response.headers['content-type']).toBe(
+        'application/problem+json; charset=utf-8',
+      )
+      expect(response.body.status).toBe(422)
+      expect(response.body.title).toBe(
+        'Não foi possível processar a requisição',
+      )
+      expect(response.body.detail).toBe(
+        'Um ou mais dados enviados na sua requisição são inválidos.',
+      )
+      expect(response.body.invalidParams).toEqual([
+        {
+          name: 'title',
+          message: 'O título deve conter pelo menos 3 caracteres',
+        },
+        {
+          name: 'slug',
+          message: 'O slug deve conter pelo menos 3 caracteres',
+        },
+        {
+          name: 'description',
+          message: 'A descrição deve conter pelo menos 3 caracteres',
+        },
+        {
+          name: 'price',
+          message: 'O preço é obrigatório',
+        },
+      ])
+      expect(response.body.type).toMatch(
+        /http:\/\/127\.0\.0\.1:(\d*)\/products/,
+      )
     })
   })
 
