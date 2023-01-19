@@ -1,3 +1,5 @@
+import 'express-async-errors'
+
 import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
@@ -9,8 +11,6 @@ import productRoute from './routes/product-route.js'
 import customerRoute from './routes/customer-route.js'
 import orderRoute from './routes/order-route.js'
 
-const app = express()
-
 const databaseConnect = async () => {
   try {
     mongoose.set('strictQuery', false)
@@ -21,6 +21,8 @@ const databaseConnect = async () => {
 }
 
 databaseConnect()
+
+const app = express()
 
 app.use(
   bodyParser.json({
@@ -48,5 +50,20 @@ app.use('/', indexRoute)
 app.use('/products', productRoute)
 app.use('/customers', customerRoute)
 app.use('/orders', orderRoute)
+app.use((err, req, res, _next) => {
+  if (err?.status) {
+    const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`
+    const response = {
+      type: url,
+      ...JSON.parse(JSON.stringify(err)),
+    }
+
+    res.set('Content-Type', 'application/problem+json')
+    res.status(err?.status ?? 500)
+    res.send(response)
+  }
+
+  res.status(500)
+})
 
 export default app
