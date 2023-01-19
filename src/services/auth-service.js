@@ -10,8 +10,13 @@ export const decodeToken = async (token) => {
 }
 
 export const authorize = function (req, res, next) {
-  const token =
-    req.body.token || req.query.token || req.headers['x-access-token']
+  const [authScheme, token] = req.headers?.authorization?.split(' ') ?? []
+
+  if (authScheme || authScheme !== 'Bearer') {
+    res.status(401).json({
+      message: 'Esquema de autenticação inválido',
+    })
+  }
 
   if (!token) {
     res.status(401).json({
@@ -31,8 +36,13 @@ export const authorize = function (req, res, next) {
 }
 
 export const isAdmin = function (req, res, next) {
-  const token =
-    req.body.token || req.query.token || req.headers['x-access-token']
+  const [authScheme, token] = req.headers?.authorization?.split(' ') ?? []
+
+  if (!authScheme || authScheme !== 'Bearer') {
+    res.status(401).json({
+      message: 'Esquema de autenticação inválido',
+    })
+  }
 
   if (!token) {
     res.status(401).json({
