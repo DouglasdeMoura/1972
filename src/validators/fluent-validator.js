@@ -35,7 +35,7 @@ ValidationContract.prototype.isFixedLen = (name, value, len, message) => {
 }
 
 ValidationContract.prototype.isEmail = (name, value, message) => {
-  const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+  const reg = /^\S+@\S+\.\S+$/
   if (!reg.test(value)) {
     errors.push({ name, message })
   }
