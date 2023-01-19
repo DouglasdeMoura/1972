@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
 import azure from 'azure-storage'
+import HTTPError from 'src/errors/http-error.js'
 import ValidationContract from '../validators/fluent-validator.js'
 import repository from '../repositories/product-repository.js'
 import config from '../config.js'
@@ -72,8 +73,12 @@ const post = async (req, res) => {
 
   // Se os dados forem inválidos
   if (!contract.isValid()) {
-    res.status(400).send(contract.errors()).end()
-    return
+    throw new HTTPError(
+      422,
+      'Não foi possível processar a requisição',
+      'Um ou mais dados enviados na sua requisição são inválidos.',
+      contract.errors(),
+    )
   }
 
   try {
