@@ -18,12 +18,11 @@
  * @property {InvalidParam[]} invalidParams - Additional information about the error.
  */
 export default class HTTPError extends Error {
-  constructor(status, title, detail, instance, invalidParams) {
+  constructor(status, title, detail, invalidParams) {
     super(title)
     this.status = status
     this.title = title
     this.detail = detail
-    this.instance = instance
     this.invalidParams = invalidParams
   }
 }
