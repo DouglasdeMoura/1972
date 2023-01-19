@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import HTTPError from 'src/errors/http-error'
 
 export const generateToken = async (data) => {
   return jwt.sign(data, process.env.SALT_KEY, { expiresIn: '1d' })
@@ -9,25 +10,20 @@ export const decodeToken = async (token) => {
   return data
 }
 
-export const authorize = function (req, res, next) {
-  const [authScheme, token] = req.headers?.authorization?.split(' ') ?? []
+export const authorize = (req, _res, next) => {
+  const authorization = req.headers?.authorization || ''
+  const [authScheme, token] = authorization?.split(' ')
 
   if (authScheme || authScheme !== 'Bearer') {
-    res.status(401).json({
-      message: 'Esquema de autenticação inválido',
-    })
+    throw new HTTPError(401, 'Esquema de autenticação inválido')
   }
 
   if (!token) {
-    res.status(401).json({
-      message: 'Acesso Restrito',
-    })
+    throw new HTTPError(401, 'Acesso Restrito')
   } else {
     jwt.verify(token, process.env.SALT_KEY, (error) => {
       if (error) {
-        res.status(401).json({
-          message: 'Token Inválido',
-        })
+        throw new HTTPError(401, 'Token Inválido')
       } else {
         next()
       }
@@ -35,32 +31,27 @@ export const authorize = function (req, res, next) {
   }
 }
 
-export const isAdmin = function (req, res, next) {
+export const isAdmin = (req, _res, next) => {
   const [authScheme, token] = req.headers?.authorization?.split(' ') ?? []
 
   if (!authScheme || authScheme !== 'Bearer') {
-    res.status(401).json({
-      message: 'Esquema de autenticação inválido',
-    })
+    throw new HTTPError(401, 'Esquema de autenticação inválido')
   }
 
   if (!token) {
-    res.status(401).json({
-      message: 'Token Inválido',
-    })
+    throw new HTTPError(401, 'Token inválido')
   } else {
     jwt.verify(token, process.env.SALT_KEY, (error, decoded) => {
       if (error) {
-        res.status(401).json({
-          message: 'Token Inválido',
-        })
+        throw new HTTPError(401, 'Token inválido')
       } else {
         if (decoded?.roles?.includes('admin')) {
           next()
         } else {
-          res.status(403).json({
-            message: 'Esta funcionalidade é restrita para administradores',
-          })
+          throw new HTTPError(
+            403,
+            'Esta funcionalidade é restrita para administradores',
+          )
         }
       }
     })
